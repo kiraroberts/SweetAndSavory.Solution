@@ -7,33 +7,33 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SweetAndSavory.Controllers
 {
-    public class ItemsController : Controller
+    public class TreatsController : Controller
     {
         private readonly SweetAndSavoryContext _db;
 
-        public ItemsController(SweetAndSavoryContext db)
+        public TreatsController(SweetAndSavoryContext db)
         {
             _db = db;
         }
 
         public ActionResult Index()
         {
-            return View(_db.Items.ToList());
+            return View(_db.Treats.ToList());
         }
 
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+            ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Name");
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(Item item, int CategoryId)
+        public ActionResult Create(Treat treat, int FlavorId)
         {
-            _db.Items.Add(item);
-            if (CategoryId != 0)
+            _db.Treats.Add(treat);
+            if (FlavorId != 0)
             {
-                _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+                _db.FlavorTreat.Add(new FlavorTreat() { FlavorId = FlavorId, TreatId = treat.TreatId });
             }
             _db.SaveChanges();
             return RedirectToAction("Index");
@@ -41,45 +41,45 @@ namespace SweetAndSavory.Controllers
 
         public ActionResult Details(int id)
         {
-            Item thisItem = _db.Items
-            .Include(item => item.Categories)
-            .ThenInclude(join => join.Category)
-            .FirstOrDefault(items => items.ItemId == id);
-            return View(thisItem);
+            Treat thisTreat = _db.Treats
+            .Include(treat => treat.Flavors)
+            .ThenInclude(join => join.Flavor)
+            .FirstOrDefault(treats => treats.TreatId == id);
+            return View(thisTreat);
         }
 
         public ActionResult Edit(int id)
         {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-            return View(thisItem);
+            var thisTreat = _db.Treats.FirstOrDefault(treats => treats.TreatId == id);
+            ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Name");
+            return View(thisTreat);
         }
 
         [HttpPost]
-        public ActionResult Edit(Item item, int CategoryId)
+        public ActionResult Edit(Treat treat, int FlavorId)
         {
-            if (CategoryId != 0)
+            if (FlavorId != 0)
             {
-                _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+                _db.FlavorTreat.Add(new FlavorTreat() { FlavorId = FlavorId, TreatId = treat.TreatId });
             }
-            _db.Entry(item).State = EntityState.Modified;
+            _db.Entry(treat).State = EntityState.Modified;
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        public ActionResult AddCategory(int id)
+        public ActionResult AddFlavor(int id)
         {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-            return View(thisItem);
+            var thisTreat = _db.Treats.FirstOrDefault(treats => treats.TreatId == id);
+            ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Name");
+            return View(thisTreat);
         }
 
         [HttpPost]
-        public ActionResult AddCategory(Item item, int CategoryId)
+        public ActionResult AddFlavor(Treat treat, int FlavorId)
         {
-            if (CategoryId != 0)
+            if (FlavorId != 0)
             {
-                _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+                _db.FlavorTreat.Add(new FlavorTreat() { FlavorId = FlavorId, TreatId = treat.TreatId });
             }
             _db.SaveChanges();
             return RedirectToAction("Index");
@@ -88,15 +88,15 @@ namespace SweetAndSavory.Controllers
 
         public ActionResult Delete(int id)
         {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            return View(thisItem);
+            var thisTreat = _db.Treats.FirstOrDefault(treats => treats.TreatId == id);
+            return View(thisTreat);
         }
 
         [HttpPost]
-        public ActionResult DeleteCategory(int joinId)
+        public ActionResult DeleteFlavor(int joinId)
         {
-            var joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
-            _db.CategoryItem.Remove(joinEntry);
+            var joinEntry = _db.FlavorTreat.FirstOrDefault(entry => entry.FlavorTreatId == joinId);
+            _db.FlavorTreat.Remove(joinEntry);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -104,8 +104,8 @@ namespace SweetAndSavory.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            _db.Items.Remove(thisItem);
+            var thisTreat = _db.Treats.FirstOrDefault(treats => treats.TreatId == id);
+            _db.Treats.Remove(thisTreat);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
