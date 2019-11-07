@@ -2,25 +2,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using SweetAndSavory.Data;
 
 namespace SweetAndSavory.Models
 {
-    public class SweetAndSavoryContextFactory : IDesignTimeDbContextFactory<SweetAndSavoryContext>
+    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
 
-        SweetAndSavoryContext IDesignTimeDbContextFactory<SweetAndSavoryContext>.CreateDbContext(string[] args)
+        ApplicationDbContext IDesignTimeDbContextFactory<ApplicationDbContext>.CreateDbContext(string[] args)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var builder = new DbContextOptionsBuilder<SweetAndSavoryContext>();
+            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             builder.UseMySql(connectionString);
 
-            return new SweetAndSavoryContext(builder.Options);
+            return new ApplicationDbContext(builder.Options);
         }
     }
 }

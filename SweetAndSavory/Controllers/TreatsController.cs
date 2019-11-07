@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SweetAndSavory.Data;
 
 namespace SweetAndSavory.Controllers
 {
     public class TreatsController : Controller
     {
-        private readonly SweetAndSavoryContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public TreatsController(SweetAndSavoryContext db)
+        public TreatsController(ApplicationDbContext db)
         {
             _db = db;
         }

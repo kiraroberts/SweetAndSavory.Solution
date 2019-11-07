@@ -3,14 +3,15 @@ using SweetAndSavory.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SweetAndSavory.Data;
 
 namespace SweetAndSavory.Controllers
 {
     public class FlavorsController : Controller
     {
-        private readonly SweetAndSavoryContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public FlavorsController(SweetAndSavoryContext db)
+        public FlavorsController(ApplicationDbContext db)
         {
             _db = db;
         }
